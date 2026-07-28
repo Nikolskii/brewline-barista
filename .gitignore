@@ -1,0 +1,24 @@
+# deps
+node_modules/
+
+# build
+dist/
+dist-ssr/
+build/
+*.local
+
+# секреты и локальный конфиг — НИКОГДА в публичный репо
+.env
+.env.local
+*.env
+
+# логи, мусор ОС
+*.log
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# локальные настройки Claude Code (launch.json — командный, остаётся в репо)
+.claude/settings.local.json

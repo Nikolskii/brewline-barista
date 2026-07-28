@@ -1,0 +1,20 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e6e2dc;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.queue {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a8078;
+}
