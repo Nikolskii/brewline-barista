@@ -1,0 +1,45 @@
+# Проверки на pull request и на push в main.
+#
+# Это единственный настоящий гейт проекта: локальный pre-commit обходится
+# флагом --no-verify, а сюда попадает всё. Merge в main разрешён только при
+# зелёном прогоне (настройка branch protection на стороне GitHub).
+#
+# Шаг `npm ci` — не только установка, но и проверка сам по себе: он ставит
+# зависимости строго из package-lock.json и падает, если что-то не резолвится
+# из реестра. Именно так ловится рассинхрон с контрактом: если версия
+# @brewline/api-types в package.json разойдётся с lock-файлом или пакет не
+# опубликуется — сборка упадёт здесь, а не у того, кто клонирует репозиторий.
+
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Установка зависимостей
+        run: npm ci
+
+      - name: Форматирование
+        # Страховка от коммита в обход pre-commit-хука.
+        run: npm run format:check
+
+      - name: Линт
+        run: npm run lint
+
+      - name: Сборка
+        # tsc -b проверяет типы (в т.ч. совместимость с версией @brewline/api-types),
+        # затем vite build убеждается, что прод-сборка реально проходит.
+        run: npm run build
