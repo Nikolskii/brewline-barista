@@ -18,16 +18,34 @@ docker-compose и деплой), `brewline-docs` (документация, ADR,
 
 ## Запуск
 
+Нужен работающий backend — интерфейс бариста только отображает и меняет очередь,
+данные живут в нём.
+
+**1. Поднять backend и базу** (в соседнем репозитории):
+
 ```bash
-npm install
-npm run dev
+git clone https://github.com/Nikolskii/brewline-backend.git
+cd brewline-backend
+docker compose up          # MongoDB + backend на http://localhost:3000
+npm run seed               # тестовые заказы в очереди
 ```
 
-Приложение поднимется на `http://localhost:5173`.
+**2. Запустить интерфейс:**
 
-Backend запускается отдельно из репозитория `brewline-backend` (docker-compose с
-MongoDB). Фронт ходит к нему **кросс-origin через CORS**, dev-proxy не используется —
-так дев повторяет прод (ADR 0004). Адрес API задаётся переменной `VITE_API_URL`.
+```bash
+npm install
+cp .env.example .env       # адрес backend
+npm run dev                # http://localhost:5174
+```
+
+Порт `5174` зафиксирован в `vite.config.ts` (`strictPort`): `5173` занимает табло,
+а список разрешённых origin на стороне backend задан явно — уехавший порт означал бы
+отказ CORS вместо данных.
+
+Фронт ходит к API **кросс-origin через CORS**, dev-proxy не используется — так дев
+повторяет прод (ADR 0004). Адрес задаётся переменной `VITE_API_URL` и обязателен:
+без неё приложение падает на старте, а не запрашивает молча само себя. Origin фронта
+должен быть в `CORS_ORIGINS` на стороне backend.
 
 Версия Node зафиксирована в `.nvmrc` — она же используется в CI.
 

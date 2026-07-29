@@ -18,10 +18,12 @@
     "*.{ts,tsx,js,mjs,json,css,scss,md,yml,yaml,html}": "prettier --write"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.101.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@brewline/api-types": "^0.1.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
