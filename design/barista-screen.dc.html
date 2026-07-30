@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Manrope',system-ui,sans-serif;
+
+  --bl-bg:#f4efe8;          /* фон экрана */
+  --bl-surface:#fbf8f3;     /* панель группы */
+  --bl-card:#ffffff;        /* карточка */
+  --bl-line:#e7dfd3;
+  --bl-line-strong:#d5c9b8;
+  --bl-ink:#292220;
+  --bl-ink-2:#6d6158;
+  --bl-ink-3:#9d9086;
+
+  --bl-new:#e0ae4e;
+  --bl-preparing:#de7a43;
+  --bl-ready:#5fc08c;
+  --bl-new-soft:#fbf1de;
+  --bl-preparing-soft:#fbeee6;
+  --bl-ready-soft:#e7f6ee;
+
+  --bl-radius-board:24px;
+  --bl-radius-card:18px;
+  --bl-radius-ctl:14px;
+  --bl-radius-pill:999px;
+
+  --bl-s1:4px; --bl-s2:8px; --bl-s3:12px; --bl-s4:16px; --bl-s5:24px; --bl-s6:32px;
+
+  --bl-num:64px;            /* номер главной карточки */
+  --bl-num-mid:44px;
+  --bl-num-sm:30px;
+  --bl-touch:76px;          /* высота основной кнопки */
+  --bl-touch-sm:60px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#eae4db;font-family:var(--font-body);color:var(--bl-ink);-webkit-font-smoothing:antialiased}
+a{color:var(--bl-preparing);text-decoration:none}
+a:hover{color:var(--bl-ink)}
+input{font-family:inherit}
+@keyframes blFlash{0%{box-shadow:0 0 0 0 rgba(224,174,78,.0);background:var(--bl-card)}18%{box-shadow:0 0 0 4px rgba(224,174,78,.55);background:var(--bl-new-soft)}100%{box-shadow:0 0 0 0 rgba(224,174,78,0);background:var(--bl-card);opacity:.25;transform:translateX(10px)}}
+@keyframes blSkel{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+@keyframes blBreathe{0%{opacity:.45}50%{opacity:1}100%{opacity:.45}}
+</style>
+</helmet>
+
+<div style="padding:40px;display:flex;flex-direction:column;gap:28px;font-family:var(--font-body)">
+
+  <header style="display:flex;flex-direction:column;gap:6px">
+    <div style="font-family:var(--font-display);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--bl-ink-3)">Brewline · рабочий экран бариста</div>
+    <div style="font-family:var(--font-display);font-size:32px;font-weight:600;color:var(--bl-ink)">Одна адаптивная раскладка, восемь состояний</div>
+  </header>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px;background:#fbf8f3;border:1px solid var(--bl-line);border-radius:var(--bl-radius-board)">
+    <span style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--bl-ink-3);padding:0 6px">Состояние</span>
+    <sc-for list="{{scenarios}}" as="s" hint-placeholder-count="8">
+      <button type="button" onClick="{{s.pick}}" style="border:1px solid {{s.border}};background:{{s.bg}};color:{{s.fg}};font-family:var(--font-body);font-weight:600;font-size:14px;padding:10px 16px;border-radius:var(--bl-radius-pill);cursor:pointer">{{s.label}}</button>
+    </sc-for>
+    <span style="width:1px;height:28px;background:var(--bl-line);margin:0 4px"></span>
+    <button type="button" onClick="{{partnerAction}}" style="border:1px dashed var(--bl-line-strong);background:transparent;color:var(--bl-ink-2);font-weight:600;font-size:14px;padding:10px 16px;border-radius:var(--bl-radius-pill);cursor:pointer">Напарник забрал заказ ↗</button>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+    <sc-for list="{{frames}}" as="f" hint-placeholder-count="2">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span style="font-family:var(--font-display);font-size:16px;font-weight:600">{{f.title}}</span>
+          <span style="font-size:13px;color:var(--bl-ink-3)">{{f.size}}</span>
+        </div>
+
+        <div style="width:{{f.w}}px;height:{{f.h}}px;background:var(--bl-bg);border-radius:28px;border:1px solid var(--bl-line-strong);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(41,34,32,.14)">
+
+          <!-- ЭКРАН ВХОДА -->
+          <sc-if value="{{f.isLogin}}">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--bl-s6);padding:var(--bl-s6)">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--bl-s2)">
+                <div style="font-family:var(--font-display);font-size:34px;font-weight:700;letter-spacing:-.01em">Brewline</div>
+                <div style="font-size:16px;color:var(--bl-ink-2)">Рубинштейна, 14 · смена 08:00–16:00</div>
+              </div>
+              <div style="width:100%;max-width:460px;background:var(--bl-card);border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);padding:var(--bl-s5);display:flex;flex-direction:column;gap:var(--bl-s4)">
+                <label style="font-size:15px;font-weight:600;color:var(--bl-ink-2)">Пароль смены</label>
+                <input type="password" value="{{pw}}" onChange="{{onPw}}" placeholder="••••••" style="height:var(--bl-touch);border-radius:var(--bl-radius-ctl);border:2px solid {{f.pwBorder}};background:{{f.pwBg}};padding:0 var(--bl-s4);font-family:var(--font-display);font-size:28px;letter-spacing:.24em;color:var(--bl-ink);outline:none;width:100%">
+                <sc-if value="{{f.pwError}}">
+                  <div style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#b8452b">
+                    <span style="width:10px;height:10px;border-radius:50%;background:#b8452b;flex:none"></span>
+                    Пароль неверный. Спросите у старшего смены.
+                  </div>
+                </sc-if>
+                <button type="button" onClick="{{doLogin}}" style="height:var(--bl-touch);border:none;border-radius:var(--bl-radius-ctl);background:var(--bl-preparing);color:#fff;font-family:var(--font-display);font-size:22px;font-weight:600;cursor:pointer;width:100%">Войти в смену</button>
+                <div style="font-size:14px;color:var(--bl-ink-3);text-align:center">Пароль общий на заведение — логина нет</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- РАБОЧИЙ ЭКРАН -->
+          <sc-if value="{{f.isBoard}}">
+            <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--bl-s4);padding:18px var(--bl-s5);background:var(--bl-surface);border-bottom:1px solid var(--bl-line)">
+              <div style="display:flex;align-items:baseline;gap:14px;min-width:0">
+                <span style="font-family:var(--font-display);font-size:22px;font-weight:700">Brewline</span>
+                <span style="font-size:15px;color:var(--bl-ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Рубинштейна, 14 · Марина</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:var(--bl-s3);flex:none">
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--bl-radius-pill);background:{{f.connBg}};border:1px solid {{f.connBorder}}">
+                  <span style="width:10px;height:10px;border-radius:50%;background:{{f.connDot}};flex:none"></span>
+                  <span style="font-size:14px;font-weight:600;color:{{f.connFg}}">{{f.connLabel}}</span>
+                </div>
+                <span style="font-family:var(--font-display);font-size:24px;font-weight:600;letter-spacing:.02em">12:41</span>
+              </div>
+            </div>
+
+            <!-- загрузка -->
+            <sc-if value="{{f.isLoading}}">
+              <div style="flex:1;display:flex;flex-direction:column;gap:var(--bl-s3);padding:var(--bl-s5);animation:blSkel 1.4s ease-in-out infinite">
+                <div style="height:22px;width:180px;border-radius:var(--bl-radius-pill);background:#e9e1d6"></div>
+                <div style="height:132px;border-radius:var(--bl-radius-card);background:#ece5da"></div>
+                <div style="height:132px;border-radius:var(--bl-radius-card);background:#ece5da"></div>
+                <div style="height:88px;border-radius:var(--bl-radius-card);background:#efe9e0"></div>
+                <div style="height:88px;border-radius:var(--bl-radius-card);background:#f1ece4"></div>
+                <div style="font-size:15px;color:var(--bl-ink-3);padding-top:var(--bl-s2)">Загружаем заказы…</div>
+              </div>
+            </sc-if>
+
+            <!-- ошибка запроса -->
+            <sc-if value="{{f.isError}}">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--bl-s4);padding:var(--bl-s6);text-align:center">
+                <div style="width:64px;height:64px;border-radius:50%;background:var(--bl-preparing-soft);border:2px solid var(--bl-preparing);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:32px;font-weight:700;color:var(--bl-preparing)">!</div>
+                <div style="font-family:var(--font-display);font-size:28px;font-weight:600">Сервер не ответил</div>
+                <div style="font-size:17px;color:var(--bl-ink-2);max-width:420px">Заказы не загрузились. Принимайте гостей по номерам на чеках, пока связь не вернётся.</div>
+                <button type="button" onClick="{{retry}}" style="height:var(--bl-touch);padding:0 var(--bl-s6);border:none;border-radius:var(--bl-radius-ctl);background:var(--bl-ink);color:#fff;font-family:var(--font-display);font-size:20px;font-weight:600;cursor:pointer">Повторить</button>
+              </div>
+            </sc-if>
+
+            <!-- пусто -->
+            <sc-if value="{{f.isEmpty}}">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--bl-s3);padding:var(--bl-s6);text-align:center">
+                <div style="width:14px;height:14px;border-radius:50%;background:var(--bl-ready);animation:blBreathe 3s ease-in-out infinite"></div>
+                <div style="font-family:var(--font-display);font-size:30px;font-weight:600">Заказов нет</div>
+                <div style="font-size:17px;color:var(--bl-ink-2);max-width:380px">Новый заказ появится здесь сам. Экран обновляется без вашего участия.</div>
+              </div>
+            </sc-if>
+
+            <!-- данные -->
+            <sc-if value="{{f.isData}}">
+              <div style="flex:1;min-height:0;display:{{f.bodyDisplay}};flex-direction:column;grid-template-columns:{{f.cols}};gap:{{f.bodyGap}};padding:{{f.bodyPad}}">
+
+                <!-- В РАБОТЕ -->
+                <section style="background:var(--bl-surface);border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);padding:var(--bl-s4);display:flex;flex-direction:column;gap:var(--bl-s3);min-height:0;flex:{{f.workFlex}}">
+                  <div style="display:flex;align-items:center;gap:var(--bl-s2);flex:none">
+                    <span style="width:12px;height:12px;border-radius:50%;background:var(--bl-preparing);flex:none"></span>
+                    <span style="font-family:var(--font-display);font-size:20px;font-weight:600">В работе</span>
+                    <span style="font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--bl-ink-3)">{{workCount}}</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:var(--bl-s3);min-height:0;overflow:hidden">
+                    <sc-for list="{{inWork}}" as="o" hint-placeholder-count="2">
+                      <article style="background:var(--bl-card);border:1px solid var(--bl-line);border-top:3px solid var(--bl-preparing);border-radius:var(--bl-radius-card);padding:var(--bl-s4);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--bl-s4);align-items:center">
+                        <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                          <div style="display:flex;align-items:baseline;gap:var(--bl-s3)">
+                            <span style="font-family:var(--font-display);font-size:var(--bl-num);font-weight:700;line-height:1;letter-spacing:-.02em">{{o.n}}</span>
+                            <span style="font-size:14px;color:var(--bl-ink-3);white-space:nowrap">в работе {{o.wait}}</span>
+                          </div>
+                          <div style="display:flex;flex-direction:column;gap:2px">
+                            <sc-for list="{{o.items}}" as="it" hint-placeholder-count="2">
+                              <div style="font-size:18px;font-weight:500;color:var(--bl-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{it.name}} <span style="color:var(--bl-ink-3);font-weight:600">×{{it.q}}</span></div>
+                            </sc-for>
+                          </div>
+                        </div>
+                        <button type="button" onClick="{{o.ready}}" style="height:var(--bl-touch);min-width:180px;border:none;border-radius:var(--bl-radius-ctl);background:var(--bl-ready);color:#0f3a26;font-family:var(--font-display);font-size:22px;font-weight:700;cursor:pointer">Готов</button>
+                      </article>
+                    </sc-for>
+                    <sc-if value="{{workEmpty}}">
+                      <div style="border:1px dashed var(--bl-line-strong);border-radius:var(--bl-radius-card);padding:var(--bl-s5);font-size:16px;color:var(--bl-ink-3)">Ничего не готовится — возьмите верхний из очереди</div>
+                    </sc-if>
+                  </div>
+                </section>
+
+                <!-- ОЧЕРЕДЬ -->
+                <section style="background:var(--bl-surface);border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);padding:var(--bl-s4);display:flex;flex-direction:column;gap:var(--bl-s3);min-height:0;flex:{{f.queueFlex}}">
+                  <div style="display:flex;align-items:center;gap:var(--bl-s2);flex:none">
+                    <span style="width:12px;height:12px;border-radius:50%;background:var(--bl-new);flex:none"></span>
+                    <span style="font-family:var(--font-display);font-size:20px;font-weight:600">Очередь</span>
+                    <span style="font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--bl-ink-3)">{{queueCount}}</span>
+                  </div>
+
+                  <sc-if value="{{hasNext}}">
+                    <article style="background:var(--bl-card);border:1px solid var(--bl-new);border-top:3px solid var(--bl-new);border-radius:var(--bl-radius-card);padding:var(--bl-s4);display:flex;flex-direction:column;gap:var(--bl-s3);flex:none;animation:{{nextAnim}}">
+                      <div style="display:flex;align-items:baseline;gap:var(--bl-s3);flex-wrap:wrap">
+                        <span style="font-family:var(--font-display);font-size:var(--bl-num-mid);font-weight:700;line-height:1">{{next.n}}</span>
+                        <span style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a6a1f;background:var(--bl-new-soft);padding:5px 10px;border-radius:var(--bl-radius-pill)">следующий</span>
+                        <span style="font-size:14px;color:var(--bl-ink-3)">ждёт {{next.wait}}</span>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:2px">
+                        <sc-for list="{{next.items}}" as="it" hint-placeholder-count="2">
+                          <div style="font-size:17px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{it.name}} <span style="color:var(--bl-ink-3);font-weight:600">×{{it.q}}</span></div>
+                        </sc-for>
+                      </div>
+                      <button type="button" onClick="{{takeNext}}" style="height:var(--bl-touch);border:none;border-radius:var(--bl-radius-ctl);background:var(--bl-preparing);color:#fff;font-family:var(--font-display);font-size:21px;font-weight:700;cursor:pointer;width:100%">Взять в работу</button>
+                    </article>
+                    <div style="display:flex;flex-direction:column;gap:var(--bl-s2);min-height:0;overflow:{{f.restOverflow}}">
+                      <sc-for list="{{f.rest}}" as="o" hint-placeholder-count="3">
+                        <div style="background:var(--bl-card);border:1px solid var(--bl-line);border-radius:var(--bl-radius-card);padding:12px var(--bl-s4);display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:var(--bl-s3);align-items:center;flex:none;animation:{{o.anim}}">
+                          <span style="font-family:var(--font-display);font-size:var(--bl-num-sm);font-weight:600;line-height:1">{{o.n}}</span>
+                          <span style="font-size:15px;color:var(--bl-ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{o.summary}}</span>
+                          <span style="font-size:14px;color:var(--bl-ink-3);white-space:nowrap">{{o.wait}}</span>
+                        </div>
+                      </sc-for>
+                      <sc-if value="{{f.hasHidden}}">
+                        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--bl-radius-card);background:#efe8de;color:var(--bl-ink-2);font-size:15px;font-weight:600;flex:none">{{f.hiddenLabel}}</div>
+                      </sc-if>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{queueEmpty}}">
+                    <div style="border:1px dashed var(--bl-line-strong);border-radius:var(--bl-radius-card);padding:var(--bl-s5);font-size:16px;color:var(--bl-ink-3)">Очередь пуста</div>
+                  </sc-if>
+                </section>
+
+                <!-- ГОТОВЫ — колонка (альбомная) -->
+                <sc-if value="{{f.readyColumn}}">
+                  <section style="border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);padding:var(--bl-s4);display:flex;flex-direction:column;gap:var(--bl-s3);min-height:0;background:transparent">
+                    <div style="display:flex;align-items:center;gap:var(--bl-s2);flex:none">
+                      <span style="width:10px;height:10px;border-radius:50%;background:var(--bl-ready);flex:none"></span>
+                      <span style="font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--bl-ink-2)">Готовы</span>
+                      <span style="font-family:var(--font-display);font-size:15px;font-weight:600;color:var(--bl-ink-3)">{{readyCount}}</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--bl-s2);min-height:0;overflow:hidden">
+                      <sc-for list="{{f.readyList}}" as="o" hint-placeholder-count="3">
+                        <div style="background:var(--bl-ready-soft);border-radius:var(--bl-radius-card);padding:10px var(--bl-s3);display:flex;flex-direction:column;gap:2px;opacity:{{o.fade}};flex:none">
+                          <span style="font-family:var(--font-display);font-size:26px;font-weight:600;line-height:1;color:#1e5a3e">{{o.n}}</span>
+                          <span style="font-size:13px;color:#4a6b58;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{o.summary}}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="font-size:13px;color:var(--bl-ink-3);flex:none">Исчезают сами через 5 минут</div>
+                  </section>
+                </sc-if>
+
+                <!-- ГОТОВЫ — полоса (портретная) -->
+                <sc-if value="{{f.readyStrip}}">
+                  <div style="flex:none;display:flex;align-items:center;gap:var(--bl-s3);padding:var(--bl-s3) var(--bl-s4);border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);background:var(--bl-ready-soft);overflow:hidden">
+                    <span style="width:10px;height:10px;border-radius:50%;background:var(--bl-ready);flex:none"></span>
+                    <span style="font-family:var(--font-display);font-size:16px;font-weight:600;color:#1e5a3e;flex:none">Готовы {{readyCount}}</span>
+                    <div style="display:flex;gap:var(--bl-s2);min-width:0;overflow:hidden">
+                      <sc-for list="{{f.readyList}}" as="o" hint-placeholder-count="4">
+                        <span style="font-family:var(--font-display);font-size:22px;font-weight:600;color:#1e5a3e;opacity:{{o.fade}};flex:none">{{o.n}}</span>
+                      </sc-for>
+                    </div>
+                    <span style="margin-left:auto;font-size:13px;color:#4a6b58;flex:none">без действий</span>
+                  </div>
+                </sc-if>
+
+              </div>
+            </sc-if>
+          </sc-if>
+
+        </div>
+
+        <div style="max-width:{{f.w}}px;font-size:14px;line-height:1.5;color:var(--bl-ink-2)">{{f.note}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- ДИЗАЙН-ТОКЕНЫ -->
+  <section style="display:flex;flex-direction:column;gap:var(--bl-s4);padding:var(--bl-s5);background:#fbf8f3;border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);max-width:1280px">
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:600">Дизайн-токены</div>
+    <div style="font-size:14px;color:var(--bl-ink-2)">Объявлены как CSS-переменные на <code style="font-family:ui-monospace,monospace">:root</code> в этом файле — реализация берёт значения оттуда, а не из разметки.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--bl-s4)">
+      <sc-for list="{{tokenGroups}}" as="g" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bl-ink-3)">{{g.title}}</div>
+          <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px;font-family:ui-monospace,monospace;color:var(--bl-ink-2)">
+              <span style="width:18px;height:18px;border-radius:5px;flex:none;background:{{r.swatch}};border:1px solid var(--bl-line)"></span>
+              <span style="color:var(--bl-ink)">{{r.name}}</span>
+              <span style="margin-left:auto">{{r.value}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-wrap:wrap;gap:var(--bl-s4);max-width:1280px">
+    <sc-for list="{{decisions}}" as="d" hint-placeholder-count="4">
+      <div style="flex:1 1 280px;padding:var(--bl-s4);background:#fbf8f3;border:1px solid var(--bl-line);border-radius:var(--bl-radius-board);display:flex;flex-direction:column;gap:8px">
+        <div style="font-family:var(--font-display);font-size:16px;font-weight:600">{{d.t}}</div>
+        <div style="font-size:14px;line-height:1.55;color:var(--bl-ink-2)">{{d.b}}</div>
+      </div>
+    </sc-for>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+const BASE = [
+  {id:1, n:'214', status:'preparing', wait:'2 мин', items:[{name:'Флэт уайт',q:1},{name:'Круассан миндальный',q:2}]},
+  {id:2, n:'215', status:'preparing', wait:'1 мин', items:[{name:'Раф кокосовый',q:2}]},
+  {id:3, n:'216', status:'queue', wait:'6 мин', items:[{name:'Капучино 300',q:2},{name:'Американо',q:1}]},
+  {id:4, n:'217', status:'queue', wait:'4 мин', items:[{name:'Латте ванильный',q:1}]},
+  {id:5, n:'218', status:'queue', wait:'3 мин', items:[{name:'Матча латте',q:2},{name:'Чай облепиха',q:1}]},
+  {id:6, n:'219', status:'queue', wait:'2 мин', items:[{name:'Эспрессо',q:2}]},
+  {id:7, n:'220', status:'queue', wait:'1 мин', items:[{name:'Какао',q:1},{name:'Круассан',q:1}]},
+  {id:11, n:'209', status:'ready', wait:'1 мин', items:[{name:'Американо',q:1}]},
+  {id:12, n:'210', status:'ready', wait:'2 мин', items:[{name:'Капучино 300',q:2}]},
+  {id:13, n:'211', status:'ready', wait:'3 мин', items:[{name:'Чай жасмин',q:1}]},
+  {id:14, n:'212', status:'ready', wait:'4 мин', items:[{name:'Латте',q:1},{name:'Тарт',q:1}]},
+];
+const EXTRA = [
+  {id:21, n:'221', status:'queue', wait:'1 мин', items:[{name:'Флэт уайт',q:3}]},
+  {id:22, n:'222', status:'queue', wait:'1 мин', items:[{name:'Эспрессо тоник',q:2}]},
+  {id:23, n:'223', status:'queue', wait:'1 мин', items:[{name:'Капучино 400',q:1},{name:'Круассан',q:2}]},
+  {id:24, n:'224', status:'queue', wait:'меньше мин', items:[{name:'Американо',q:4}]},
+  {id:25, n:'225', status:'queue', wait:'меньше мин', items:[{name:'Матча латте',q:1}]},
+  {id:26, n:'226', status:'queue', wait:'меньше мин', items:[{name:'Раф',q:2}]},
+  {id:27, n:'227', status:'queue', wait:'меньше мин', items:[{name:'Какао',q:2}]},
+];
+
+const SCENARIOS = [
+  {key:'normal',  label:'Обычная работа'},
+  {key:'empty',   label:'Пусто'},
+  {key:'loading', label:'Загрузка'},
+  {key:'error',   label:'Ошибка запроса'},
+  {key:'offline', label:'Потеря связи'},
+  {key:'long',    label:'Длинная очередь'},
+  {key:'login',   label:'Экран входа'},
+  {key:'badpw',   label:'Пароль неверный'},
+];
+
+const clone = a => a.map(o => ({...o, items: o.items.map(i => ({...i}))}));
+
+class Component extends DCLogic {
+  state = { scenario: 'normal', orders: clone(BASE), pw: '', pwError: false, flash: null };
+
+  dataFor(s) {
+    if (s === 'empty') return [];
+    if (s === 'long') return clone(BASE).concat(clone(EXTRA));
+    return clone(BASE);
+  }
+
+  pick = (key) => {
+    this.setState({
+      scenario: key,
+      orders: this.dataFor(key),
+      flash: null,
+      pw: key === 'badpw' ? '3391' : '',
+      pwError: key === 'badpw',
+    });
+  };
+
+  advance = (id, status) => {
+    this.setState(s => ({ orders: s.orders.map(o => o.id === id ? {...o, status, wait: 'только что'} : o) }));
+  };
+
+  partnerAction = () => {
+    const q = this.state.orders.filter(o => o.status === 'queue');
+    const victim = q[1] || q[0];
+    if (!victim) return;
+    this.setState({ flash: victim.id });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => {
+      this.setState(s => ({ orders: s.orders.filter(o => o.id !== victim.id), flash: null }));
+    }, 1500);
+  };
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  summary(o) { return o.items.map(i => i.name + ' ×' + i.q).join(' · '); }
+
+  frame(cfg, common) {
+    const sc = this.state.scenario;
+    const isLogin = sc === 'login' || sc === 'badpw';
+    const rest = common.queue.slice(1);
+    const cap = cfg.portrait ? 3 : 4;
+    const shown = rest.slice(0, cap);
+    const hidden = rest.length - shown.length;
+    const conn = sc === 'offline'
+      ? {connLabel:'Нет обновлений · данные на 12:41', connBg:'var(--bl-new-soft)', connBorder:'var(--bl-new)', connDot:'var(--bl-new)', connFg:'#7d5f18'}
+      : {connLabel:'На связи', connBg:'#eef4ef', connBorder:'var(--bl-line)', connDot:'var(--bl-ready)', connFg:'var(--bl-ink-2)'};
+    return {
+      ...cfg, ...conn,
+      isLogin,
+      isBoard: !isLogin,
+      isLoading: sc === 'loading',
+      isError: sc === 'error',
+      isEmpty: sc !== 'loading' && sc !== 'error' && common.total === 0,
+      isData: sc !== 'loading' && sc !== 'error' && common.total > 0,
+      pwError: this.state.pwError,
+      pwBorder: this.state.pwError ? '#b8452b' : 'var(--bl-line-strong)',
+      pwBg: this.state.pwError ? '#fdf1ee' : '#fff',
+      bodyDisplay: cfg.portrait ? 'flex' : 'grid',
+      cols: cfg.portrait ? 'none' : '1.5fr 1.12fr 0.62fr',
+      bodyGap: cfg.portrait ? '12px' : '16px',
+      bodyPad: cfg.portrait ? '16px' : '16px',
+      workFlex: cfg.portrait ? 'none' : '1',
+      queueFlex: cfg.portrait ? '1 1 auto' : '1',
+      restOverflow: cfg.portrait ? 'auto' : 'hidden',
+      rest: shown.map(o => ({...o, summary: this.summary(o), anim: this.state.flash === o.id ? 'blFlash 1.5s ease forwards' : 'none'})),
+      hasHidden: hidden > 0,
+      hiddenLabel: cfg.portrait ? 'ещё ' + hidden + ' — прокрутите список ↓' : 'ещё ' + hidden + ' в очереди',
+      readyColumn: !cfg.portrait,
+      readyStrip: cfg.portrait,
+      readyList: common.ready.slice(0, cfg.portrait ? 6 : 4).map((o, i) => ({...o, summary: this.summary(o), fade: String(1 - i * 0.16)})),
+    };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const orders = st.orders;
+    const inWork = orders.filter(o => o.status === 'preparing');
+    const queue = orders.filter(o => o.status === 'queue');
+    const ready = orders.filter(o => o.status === 'ready');
+    const next = queue[0];
+    const common = {queue, ready, total: orders.length};
+
+    const frames = [
+      this.frame({key:'l', portrait:false, w:1280, h:800, title:'Альбомная', size:'1280 × 800 — без прокрутки',
+        note:'Три группы, три веса: «В работе» — самая широкая колонка и номера 64 px; «Очередь» уже, но верхняя карточка выделена как активная; «Готовы» — узкая справочная полоса без рамки-панели и без кнопок. Всё помещается на экран: длинная очередь схлопывается в счётчик, а не в прокрутку.'}, common),
+      this.frame({key:'p', portrait:true, w:840, h:1180, title:'Портретная', size:'840 × 1180 — прокручивается только хвост очереди',
+        note:'Всегда видимы: шапка со связью, все карточки «В работе», следующая карточка очереди с кнопкой и полоса «Готовы» у нижнего края. За границу уходит только хвост очереди — карточки с 2-й и дальше; они прокручиваются внутри своей области, остальное закреплено.'}, common),
+    ];
+
+    return {
+      frames,
+      scenarios: SCENARIOS.map(s => ({
+        label: s.label,
+        pick: () => this.pick(s.key),
+        bg: st.scenario === s.key ? 'var(--bl-ink)' : '#fff',
+        fg: st.scenario === s.key ? '#fff' : 'var(--bl-ink-2)',
+        border: st.scenario === s.key ? 'var(--bl-ink)' : 'var(--bl-line)',
+      })),
+      partnerAction: this.partnerAction,
+      inWork: inWork.map(o => ({...o, ready: () => this.advance(o.id, 'ready')})),
+      workCount: String(inWork.length),
+      workEmpty: inWork.length === 0,
+      queueCount: String(queue.length),
+      queueEmpty: queue.length === 0,
+      hasNext: !!next,
+      next: next || {n:'', items:[], wait:''},
+      nextAnim: st.flash && next && st.flash === next.id ? 'blFlash 1.5s ease forwards' : 'none',
+      takeNext: () => next && this.advance(next.id, 'preparing'),
+      readyCount: String(ready.length),
+      pw: st.pw,
+      onPw: (e) => this.setState({pw: e.target.value, pwError: false}),
+      doLogin: () => this.setState({pwError: true}),
+      retry: () => this.pick('normal'),
+      tokenGroups: [
+        {title:'Шрифты', rows:[
+          {name:'--font-display', value:'Space Grotesk', swatch:'transparent'},
+          {name:'--font-body', value:'Manrope', swatch:'transparent'},
+        ]},
+        {title:'Статусы', rows:[
+          {name:'--bl-new', value:'#e0ae4e', swatch:'#e0ae4e'},
+          {name:'--bl-preparing', value:'#de7a43', swatch:'#de7a43'},
+          {name:'--bl-ready', value:'#5fc08c', swatch:'#5fc08c'},
+          {name:'--bl-new-soft', value:'#fbf1de', swatch:'#fbf1de'},
+          {name:'--bl-preparing-soft', value:'#fbeee6', swatch:'#fbeee6'},
+          {name:'--bl-ready-soft', value:'#e7f6ee', swatch:'#e7f6ee'},
+        ]},
+        {title:'Поверхности и текст', rows:[
+          {name:'--bl-bg', value:'#f4efe8', swatch:'#f4efe8'},
+          {name:'--bl-surface', value:'#fbf8f3', swatch:'#fbf8f3'},
+          {name:'--bl-card', value:'#ffffff', swatch:'#ffffff'},
+          {name:'--bl-line', value:'#e7dfd3', swatch:'#e7dfd3'},
+          {name:'--bl-line-strong', value:'#d5c9b8', swatch:'#d5c9b8'},
+          {name:'--bl-ink', value:'#292220', swatch:'#292220'},
+          {name:'--bl-ink-2', value:'#6d6158', swatch:'#6d6158'},
+          {name:'--bl-ink-3', value:'#9d9086', swatch:'#9d9086'},
+        ]},
+        {title:'Радиусы', rows:[
+          {name:'--bl-radius-board', value:'24px', swatch:'transparent'},
+          {name:'--bl-radius-card', value:'18px', swatch:'transparent'},
+          {name:'--bl-radius-ctl', value:'14px', swatch:'transparent'},
+          {name:'--bl-radius-pill', value:'999px', swatch:'transparent'},
+        ]},
+        {title:'Отступы и размеры', rows:[
+          {name:'--bl-s1…s6', value:'4·8·12·16·24·32', swatch:'transparent'},
+          {name:'--bl-num', value:'64px', swatch:'transparent'},
+          {name:'--bl-num-mid', value:'44px', swatch:'transparent'},
+          {name:'--bl-num-sm', value:'30px', swatch:'transparent'},
+          {name:'--bl-touch', value:'76px', swatch:'transparent'},
+          {name:'--bl-touch-sm', value:'60px', swatch:'transparent'},
+        ]},
+      ],
+      decisions: [
+        {t:'Асимметрия вместо трёх колонок', b:'Ширина колонки = вес группы: 1.5 / 1.12 / 0.62. «Готовы» лишена панели-фона и кнопок, поэтому не конкурирует за внимание.'},
+        {t:'Одна активная цель', b:'В очереди кнопка есть только у верхней карточки — той, что ждёт дольше всех. Остальные читаются как список. Статус двигается только вперёд, кнопок «назад» нет.'},
+        {t:'Мокрые руки', b:'Основные кнопки 76 px в высоту и не меньше 180 px в ширину, радиус 14 px, никакой логики по наведению курсора.'},
+        {t:'Разрыв связи — не авария', b:'Меняется только чип в шапке: янтарный цвет и время последних данных. Карточки остаются активными — они верны на момент разрыва.'},
+        {t:'Изменение напарником', b:'Карточка на 1,5 с получает янтарное кольцо и подложку, затем уезжает вправо и гаснет — перемещение читается как событие, а не сбой.'},
+        {t:'Портрет: приоритет по вертикали', b:'Закреплены шапка, «В работе», следующий заказ и полоса «Готовы». Прокручивается только хвост очереди — он единственный, что можно потерять из вида без вреда.'},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
