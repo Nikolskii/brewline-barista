@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getOrdersSnapshot } from '@/api/orders';
+import { getOrdersSnapshot } from '../api/orders';
 
-const ORDERS_KEY = ['orders'];
+export const ordersQueryKey = ['orders'] as const;
 
 /**
  * Очередь заказов для интерфейса бариста.
@@ -12,7 +12,7 @@ const ORDERS_KEY = ['orders'];
  */
 export function useOrderQueue() {
   const query = useQuery({
-    queryKey: ORDERS_KEY,
+    queryKey: ordersQueryKey,
     queryFn: getOrdersSnapshot,
   });
 
