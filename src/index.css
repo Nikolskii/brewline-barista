@@ -14,6 +14,9 @@
   --bl-new-soft: #fbf1de;
   --bl-preparing: #de7a43;
   --bl-ready: #5fc08c;
+  --bl-ready-soft: #e7f6ee;
+  --bl-ready-ink: #1e5a3e;
+  --bl-ready-summary-ink: #4a6b58;
   --bl-connection-live-bg: #eef4ef;
 
   --bl-radius-board: 24px;
@@ -49,6 +52,16 @@
   --bl-queue-tail-summary-font-size: 15px;
   --bl-queue-tail-wait-font-size: 14px;
   --bl-queue-tail-padding-y: 12px;
+  --bl-ready-section-dot-size: 10px;
+  --bl-ready-section-title-font-size: 17px;
+  --bl-ready-section-count-font-size: 15px;
+  --bl-ready-order-number-font-size: 26px;
+  --bl-ready-order-summary-font-size: 13px;
+  --bl-ready-order-padding-y: 10px;
+  --bl-ready-order-opacity-second: 0.84;
+  --bl-ready-order-opacity-third: 0.68;
+  --bl-ready-order-opacity-fourth: 0.52;
+  --bl-ready-footer-font-size: 13px;
 
   --bl-header-padding-y: 18px;
   --bl-header-brand-font-size: 22px;

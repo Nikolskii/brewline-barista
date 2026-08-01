@@ -78,6 +78,44 @@ const previewNewOrders = [
   },
 ] satisfies { order: Order; wait: string }[];
 
+const previewReadyOrders = [
+  {
+    orderId: 'preview-209',
+    number: 209,
+    items: [{ name: 'Американо', quantity: 1 }],
+    source: 'cashier',
+    status: 'ready',
+    createdAt: '2026-08-01T09:34:00.000Z',
+  },
+  {
+    orderId: 'preview-210',
+    number: 210,
+    items: [{ name: 'Капучино 300', quantity: 2 }],
+    source: 'cashier',
+    status: 'ready',
+    createdAt: '2026-08-01T09:35:00.000Z',
+  },
+  {
+    orderId: 'preview-211',
+    number: 211,
+    items: [{ name: 'Чай жасмин', quantity: 1 }],
+    source: 'cashier',
+    status: 'ready',
+    createdAt: '2026-08-01T09:36:00.000Z',
+  },
+  {
+    orderId: 'preview-212',
+    number: 212,
+    items: [
+      { name: 'Латте', quantity: 1 },
+      { name: 'Тарт', quantity: 1 },
+    ],
+    source: 'cashier',
+    status: 'ready',
+    createdAt: '2026-08-01T09:37:00.000Z',
+  },
+] satisfies Order[];
+
 /**
  * Доска очереди. Пока показывает данные preview; REST-снапшот заменит их
  * отдельным шагом, не меняя границы UI-компонентов.
@@ -141,6 +179,30 @@ export function OrderBoard() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section
+        aria-labelledby="ready-orders-heading"
+        className={`${styles.section} ${styles.readySection}`}
+      >
+        <div className={styles.sectionHeader}>
+          <span aria-hidden="true" className={styles.readyDot} />
+          <h2 className={styles.readyTitle} id="ready-orders-heading">
+            Готовы
+          </h2>
+          <span className={styles.readyCount}>{previewReadyOrders.length}</span>
+        </div>
+        <div className={styles.readyOrders}>
+          {previewReadyOrders.map((order) => (
+            <div className={styles.readyOrder} key={order.orderId}>
+              <span className={styles.readyOrderNumber}>{order.number}</span>
+              <span className={styles.readyOrderSummary}>
+                {order.items.map((item) => `${item.name} ×${item.quantity}`).join(' · ')}
+              </span>
+            </div>
+          ))}
+        </div>
+        <span className={styles.readyFooter}>Исчезают сами через 5 минут</span>
       </section>
     </div>
   );
