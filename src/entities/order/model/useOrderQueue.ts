@@ -24,5 +24,6 @@ export function useOrderQueue() {
     isPending: query.isPending,
     isError: query.isError,
     error: query.error,
+    refetch: query.refetch,
   };
 }

@@ -1,0 +1,108 @@
+.loading {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--bl-s3);
+  padding: var(--bl-s5);
+  animation: skeleton-pulse var(--bl-skeleton-animation-duration) ease-in-out infinite;
+}
+
+.skeleton {
+  display: block;
+  border-radius: var(--bl-radius-card);
+}
+
+.skeletonHeading {
+  width: var(--bl-skeleton-heading-width);
+  height: var(--bl-skeleton-heading-height);
+  border-radius: var(--bl-radius-pill);
+  background: var(--bl-skeleton-heading-bg);
+}
+
+.skeletonCard {
+  height: var(--bl-skeleton-card-height);
+  background: var(--bl-skeleton-card-bg);
+}
+
+.skeletonShortCard {
+  height: var(--bl-skeleton-short-card-height);
+  background: var(--bl-skeleton-short-card-bg);
+}
+
+.loadingLabel {
+  padding-top: var(--bl-s2);
+  color: var(--bl-ink-3);
+  font-size: var(--bl-loading-label-font-size);
+}
+
+.message {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bl-s4);
+  padding: var(--bl-s6);
+  text-align: center;
+}
+
+.errorIcon {
+  display: grid;
+  width: var(--bl-error-icon-size);
+  height: var(--bl-error-icon-size);
+  place-items: center;
+  border: var(--bl-error-icon-border-width) solid var(--bl-preparing);
+  border-radius: 50%;
+  color: var(--bl-preparing);
+  background: var(--bl-preparing-soft);
+  font-family: var(--font-display);
+  font-size: var(--bl-error-icon-font-size);
+  font-weight: 700;
+}
+
+.emptyDot {
+  width: var(--bl-empty-dot-size);
+  height: var(--bl-empty-dot-size);
+  border-radius: 50%;
+  background: var(--bl-ready);
+  animation: breathe var(--bl-empty-dot-animation-duration) ease-in-out infinite;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--bl-state-title-font-size);
+  font-weight: 600;
+}
+
+.description {
+  max-width: var(--bl-state-description-max-width);
+  margin: 0;
+  color: var(--bl-ink-2);
+  font-size: var(--bl-state-description-font-size);
+}
+
+.retryButton {
+  height: var(--bl-touch);
+  padding: 0 var(--bl-s6);
+  border: 0;
+  border-radius: var(--bl-radius-ctl);
+  color: var(--bl-button-ink);
+  background: var(--bl-ink);
+  font-family: var(--font-display);
+  font-size: var(--bl-retry-button-font-size);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes skeleton-pulse {
+  50% {
+    opacity: var(--bl-skeleton-pulse-opacity);
+  }
+}
+
+@keyframes breathe {
+  50% {
+    opacity: var(--bl-empty-dot-pulse-opacity);
+  }
+}

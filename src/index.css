@@ -13,6 +13,7 @@
   --bl-new: #e0ae4e;
   --bl-new-soft: #fbf1de;
   --bl-preparing: #de7a43;
+  --bl-preparing-soft: #fbeee6;
   --bl-ready: #5fc08c;
   --bl-ready-soft: #e7f6ee;
   --bl-ready-ink: #1e5a3e;
@@ -71,6 +72,28 @@
   --bl-connection-dot-size: 10px;
   --bl-connection-label-font-size: 14px;
   --bl-connection-padding-x: 14px;
+
+  --bl-skeleton-heading-bg: #e9e1d6;
+  --bl-skeleton-card-bg: #ece5da;
+  --bl-skeleton-short-card-bg: #efe9e0;
+  --bl-skeleton-heading-width: 180px;
+  --bl-skeleton-heading-height: 22px;
+  --bl-skeleton-card-height: 132px;
+  --bl-skeleton-short-card-height: 88px;
+  --bl-skeleton-animation-duration: 1.4s;
+  --bl-skeleton-pulse-opacity: 0.58;
+  --bl-loading-label-font-size: 15px;
+  --bl-error-icon-size: 64px;
+  --bl-error-icon-border-width: 2px;
+  --bl-error-icon-font-size: 32px;
+  --bl-empty-dot-size: 14px;
+  --bl-empty-dot-animation-duration: 3s;
+  --bl-empty-dot-pulse-opacity: 0.52;
+  --bl-state-title-font-size: 30px;
+  --bl-state-description-font-size: 17px;
+  --bl-state-description-max-width: 420px;
+  --bl-retry-button-font-size: 20px;
+  --bl-button-ink: #ffffff;
 }
 
 * {
