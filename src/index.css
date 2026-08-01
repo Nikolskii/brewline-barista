@@ -11,6 +11,7 @@
   --bl-ink-2: #6d6158;
   --bl-ink-3: #9d9086;
   --bl-new: #e0ae4e;
+  --bl-new-soft: #fbf1de;
   --bl-preparing: #de7a43;
   --bl-ready: #5fc08c;
   --bl-connection-live-bg: #eef4ef;
@@ -39,6 +40,15 @@
   --bl-order-action-min-width: 180px;
   --bl-order-action-font-size: 22px;
   --bl-ready-action-ink: #0f3a26;
+  --bl-new-badge-ink: #8a6a1f;
+  --bl-next-order-number-font-size: 44px;
+  --bl-next-order-item-font-size: 17px;
+  --bl-next-order-badge-font-size: 12px;
+  --bl-next-order-badge-letter-spacing: 0.12em;
+  --bl-queue-tail-number-font-size: 30px;
+  --bl-queue-tail-summary-font-size: 15px;
+  --bl-queue-tail-wait-font-size: 14px;
+  --bl-queue-tail-padding-y: 12px;
 
   --bl-header-padding-y: 18px;
   --bl-header-brand-font-size: 22px;

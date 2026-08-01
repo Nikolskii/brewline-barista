@@ -16,6 +16,12 @@
   }
 }
 
+.preparing {
+  width: 100%;
+  color: var(--bl-card);
+  background: var(--bl-preparing);
+}
+
 @media (max-width: 640px) {
   .button {
     width: 100%;
