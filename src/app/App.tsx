@@ -1,12 +1,11 @@
-import { LoginPage } from '@/pages/login';
+import { BaristaWorkspacePage } from '@/pages/barista-workspace';
 
 /**
- * Корень приложения выбирает экран по сессии.
- * Проверка GET /auth/session появится вместе с auth API; до неё вход — первый
- * реализуемый визуальный сценарий.
+ * Временный визуальный preview рабочего места. Проверка GET /auth/session
+ * появится вместе с auth API и будет выбирать LoginPage или BaristaWorkspacePage.
  */
 function App() {
-  return <LoginPage />;
+  return <BaristaWorkspacePage />;
 }
 
 export default App;

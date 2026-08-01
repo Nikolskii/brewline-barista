@@ -4,21 +4,33 @@
   --font-body: 'Manrope', system-ui, sans-serif;
 
   --bl-bg: #f4efe8;
+  --bl-surface: #fbf8f3;
   --bl-card: #ffffff;
   --bl-line: #e7dfd3;
   --bl-ink: #292220;
   --bl-ink-2: #6d6158;
   --bl-ink-3: #9d9086;
   --bl-preparing: #de7a43;
+  --bl-ready: #5fc08c;
+  --bl-connection-live-bg: #eef4ef;
 
   --bl-radius-board: 24px;
   --bl-radius-ctl: 14px;
+  --bl-radius-pill: 999px;
 
   --bl-s2: 8px;
+  --bl-s3: 12px;
   --bl-s4: 16px;
   --bl-s5: 24px;
   --bl-s6: 32px;
   --bl-touch: 76px;
+
+  --bl-header-padding-y: 18px;
+  --bl-header-brand-font-size: 22px;
+  --bl-current-time-font-size: 24px;
+  --bl-connection-dot-size: 10px;
+  --bl-connection-label-font-size: 14px;
+  --bl-connection-padding-x: 14px;
 }
 
 * {
