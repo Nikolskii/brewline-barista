@@ -10,11 +10,13 @@
   --bl-ink: #292220;
   --bl-ink-2: #6d6158;
   --bl-ink-3: #9d9086;
+  --bl-new: #e0ae4e;
   --bl-preparing: #de7a43;
   --bl-ready: #5fc08c;
   --bl-connection-live-bg: #eef4ef;
 
   --bl-radius-board: 24px;
+  --bl-radius-card: 18px;
   --bl-radius-ctl: 14px;
   --bl-radius-pill: 999px;
 
@@ -24,6 +26,19 @@
   --bl-s5: 24px;
   --bl-s6: 32px;
   --bl-touch: 76px;
+
+  --bl-section-dot-size: 12px;
+  --bl-section-title-font-size: 20px;
+  --bl-section-count-font-size: 16px;
+  --bl-order-card-status-border-width: 3px;
+  --bl-order-card-info-gap: 6px;
+  --bl-order-number-font-size: 64px;
+  --bl-order-meta-font-size: 14px;
+  --bl-order-item-font-size: 18px;
+  --bl-order-item-gap: 2px;
+  --bl-order-action-min-width: 180px;
+  --bl-order-action-font-size: 22px;
+  --bl-ready-action-ink: #0f3a26;
 
   --bl-header-padding-y: 18px;
   --bl-header-brand-font-size: 22px;

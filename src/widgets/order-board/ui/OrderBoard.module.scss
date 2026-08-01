@@ -1,0 +1,60 @@
+.board {
+  flex: 1;
+  min-height: 0;
+  padding: var(--bl-s4);
+}
+
+.section {
+  display: flex;
+  max-width: 760px;
+  flex-direction: column;
+  gap: var(--bl-s3);
+  padding: var(--bl-s4);
+  border: 1px solid var(--bl-line);
+  border-radius: var(--bl-radius-board);
+  background: var(--bl-surface);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--bl-s2);
+}
+
+.sectionDot {
+  width: var(--bl-section-dot-size);
+  height: var(--bl-section-dot-size);
+  flex: none;
+  border-radius: 50%;
+  background: var(--bl-preparing);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--bl-section-title-font-size);
+  font-weight: 600;
+}
+
+.sectionCount {
+  color: var(--bl-ink-3);
+  font-family: var(--font-display);
+  font-size: var(--bl-section-count-font-size);
+  font-weight: 600;
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bl-s3);
+}
+
+@media (max-width: 640px) {
+  .board {
+    padding: var(--bl-s3);
+  }
+
+  .section {
+    max-width: none;
+  }
+}

@@ -1,0 +1,23 @@
+.button {
+  min-width: var(--bl-order-action-min-width);
+  height: var(--bl-touch);
+  border: 0;
+  border-radius: var(--bl-radius-ctl);
+  color: var(--bl-ready-action-ink);
+  background: var(--bl-ready);
+  font-family: var(--font-display);
+  font-size: var(--bl-order-action-font-size);
+  font-weight: 700;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid var(--bl-ink);
+    outline-offset: 3px;
+  }
+}
+
+@media (max-width: 640px) {
+  .button {
+    width: 100%;
+  }
+}
