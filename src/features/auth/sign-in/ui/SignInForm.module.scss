@@ -1,0 +1,84 @@
+.form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--bl-s4);
+  padding: var(--bl-s5);
+  border: 1px solid var(--bl-line);
+  border-radius: var(--bl-radius-board);
+  background: var(--bl-card);
+}
+
+.label {
+  color: var(--bl-ink-2);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  height: var(--bl-touch);
+  padding: 0 112px 0 var(--bl-s4);
+  border: 2px solid var(--bl-line);
+  border-radius: var(--bl-radius-ctl);
+  outline: none;
+  color: var(--bl-ink);
+  background: var(--bl-card);
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 0.24em;
+
+  &:focus-visible {
+    border-color: var(--bl-preparing);
+  }
+}
+
+.passwordField {
+  position: relative;
+}
+
+.toggle {
+  position: absolute;
+  top: 50%;
+  right: var(--bl-s2);
+  min-width: 92px;
+  height: 60px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: var(--bl-radius-ctl);
+  color: var(--bl-ink-2);
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid var(--bl-preparing);
+    outline-offset: -3px;
+  }
+}
+
+.submit {
+  height: var(--bl-touch);
+  border: 0;
+  border-radius: var(--bl-radius-ctl);
+  color: var(--bl-card);
+  background: var(--bl-preparing);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 3px solid var(--bl-ink);
+    outline-offset: 3px;
+  }
+}
+
+.hint {
+  margin: 0;
+  color: var(--bl-ink-3);
+  font-size: 14px;
+  text-align: center;
+}

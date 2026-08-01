@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getOrdersSnapshot } from '@/api/orders';
+import { getOrdersSnapshot } from '../api/orders';
 
-const ORDERS_KEY = ['orders'];
+export const ordersQueryKey = ['orders'] as const;
 
 /**
  * Очередь заказов для интерфейса бариста.
@@ -12,8 +12,12 @@ const ORDERS_KEY = ['orders'];
  */
 export function useOrderQueue() {
   const query = useQuery({
-    queryKey: ORDERS_KEY,
+    queryKey: ordersQueryKey,
     queryFn: getOrdersSnapshot,
+    // Актуальность очереди обеспечит SSE. Не делаем скрытый повторный GET,
+    // когда бариста просто вернулся на вкладку; при потере SSE будет отдельный
+    // явный resync со своим состоянием соединения.
+    refetchOnWindowFocus: false,
   });
 
   return {
@@ -24,5 +28,6 @@ export function useOrderQueue() {
     isPending: query.isPending,
     isError: query.isError,
     error: query.error,
+    refetch: query.refetch,
   };
 }

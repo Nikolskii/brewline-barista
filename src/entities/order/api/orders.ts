@@ -1,6 +1,6 @@
 import type { Order } from '@brewline/api-types';
 
-import { apiGet } from './client';
+import { apiGet } from '@/shared/api';
 
 /**
  * Снапшот активной очереди (GET /orders).
