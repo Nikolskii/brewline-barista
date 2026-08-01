@@ -62,6 +62,8 @@
   --bl-ready-order-opacity-third: 0.68;
   --bl-ready-order-opacity-fourth: 0.52;
   --bl-ready-footer-font-size: 13px;
+  --bl-ready-strip-order-number-font-size: 22px;
+  --bl-ready-strip-title-font-size: 16px;
 
   --bl-header-padding-y: 18px;
   --bl-header-brand-font-size: 22px;

@@ -145,7 +145,10 @@ export function OrderBoard() {
         </div>
       </section>
 
-      <section aria-labelledby="queue-heading" className={styles.section}>
+      <section
+        aria-labelledby="queue-heading"
+        className={`${styles.section} ${styles.queueSection}`}
+      >
         <div className={styles.sectionHeader}>
           <span aria-hidden="true" className={styles.queueDot} />
           <h2 className={styles.sectionTitle} id="queue-heading">
@@ -203,6 +206,7 @@ export function OrderBoard() {
           ))}
         </div>
         <span className={styles.readyFooter}>Исчезают сами через 5 минут</span>
+        <span className={styles.readyPassive}>без действий</span>
       </section>
     </div>
   );
