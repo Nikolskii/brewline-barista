@@ -14,6 +14,10 @@ export function useOrderQueue() {
   const query = useQuery({
     queryKey: ordersQueryKey,
     queryFn: getOrdersSnapshot,
+    // Актуальность очереди обеспечит SSE. Не делаем скрытый повторный GET,
+    // когда бариста просто вернулся на вкладку; при потере SSE будет отдельный
+    // явный resync со своим состоянием соединения.
+    refetchOnWindowFocus: false,
   });
 
   return {
