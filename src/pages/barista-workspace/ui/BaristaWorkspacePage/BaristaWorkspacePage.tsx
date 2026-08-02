@@ -6,11 +6,11 @@ import { QueueState } from '../QueueState/QueueState';
 import styles from './BaristaWorkspacePage.module.scss';
 
 export function BaristaWorkspacePage() {
-  const { isError, isPending, orders, refetch } = useOrderQueue();
+  const { connection, isError, isPending, orders, refetch } = useOrderQueue();
 
   return (
     <main className={styles.page}>
-      <WorkspaceHeader />
+      <WorkspaceHeader connection={connection} />
       {isPending && <QueueState kind="loading" />}
       {isError && <QueueState kind="error" onRetry={() => void refetch()} />}
       {!isPending && !isError && orders.length === 0 && <QueueState kind="empty" />}

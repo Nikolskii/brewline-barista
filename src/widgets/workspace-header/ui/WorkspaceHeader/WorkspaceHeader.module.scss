@@ -47,6 +47,18 @@
   background: var(--bl-ready);
 }
 
+.connecting,
+.reconnecting {
+  border-color: var(--bl-new);
+  color: var(--bl-connection-stale-ink);
+  background: var(--bl-new-soft);
+}
+
+.connecting .connectionDot,
+.reconnecting .connectionDot {
+  background: var(--bl-new);
+}
+
 .time {
   min-width: 3ch;
   font-family: var(--font-display);

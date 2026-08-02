@@ -1,26 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getOrdersSnapshot } from '../api/orders';
+import { ordersQueryKey } from './orderQuery';
+import { useOrderQueueStream } from './useOrderQueueStream';
 
-export const ordersQueryKey = ['orders'] as const;
+export { ordersQueryKey } from './orderQuery';
 
 /**
  * Очередь заказов для интерфейса бариста.
  *
- * Пока только первичный снапшот по REST. Живое обновление через SSE появится
- * отдельной задачей — там снапшоты из потока будут класться прямо в кэш Query.
+ * REST даёт начальный снапшот, а SSE обновляет тот же Query-кэш.
  */
 export function useOrderQueue() {
   const query = useQuery({
     queryKey: ordersQueryKey,
     queryFn: getOrdersSnapshot,
-    // Актуальность очереди обеспечит SSE. Не делаем скрытый повторный GET,
-    // когда бариста просто вернулся на вкладку; при потере SSE будет отдельный
-    // явный resync со своим состоянием соединения.
     refetchOnWindowFocus: false,
   });
 
+  const connection = useOrderQueueStream({
+    dataUpdatedAt: query.dataUpdatedAt,
+    enabled: query.isSuccess,
+  });
+
   return {
+    connection,
     orders: query.data ?? [],
     // Именно isPending, а не isLoading: isLoading гаснет в паузах между
     // повторными попытками, и тогда «сервер недоступен» неотличимо от «очередь
