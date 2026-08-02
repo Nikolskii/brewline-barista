@@ -3,6 +3,7 @@ import styles from './QueueState.module.scss';
 type QueueStateProps =
   { kind: 'loading' } | { kind: 'empty' } | { kind: 'error'; onRetry: () => void };
 
+/** Экранное состояние очереди до появления доски заказов. */
 export function QueueState(props: QueueStateProps) {
   if (props.kind === 'loading') {
     return (

@@ -1,1 +1,1 @@
-export { AdvanceOrderStatusButton } from './ui/AdvanceOrderStatusButton';
+export { AdvanceOrderStatusButton } from './ui/AdvanceOrderStatusButton/AdvanceOrderStatusButton';

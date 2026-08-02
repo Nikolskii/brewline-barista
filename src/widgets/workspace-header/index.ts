@@ -1,1 +1,1 @@
-export { WorkspaceHeader } from './ui/WorkspaceHeader';
+export { WorkspaceHeader } from './ui/WorkspaceHeader/WorkspaceHeader';

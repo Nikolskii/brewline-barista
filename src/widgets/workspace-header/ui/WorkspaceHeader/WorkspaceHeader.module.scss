@@ -1,3 +1,4 @@
+/* Шапка рабочего места и индикатор SSE-соединения. */
 .header {
   display: flex;
   align-items: center;
@@ -44,6 +45,18 @@
   flex: none;
   border-radius: 50%;
   background: var(--bl-ready);
+}
+
+.connecting,
+.reconnecting {
+  border-color: var(--bl-new);
+  color: var(--bl-connection-stale-ink);
+  background: var(--bl-new-soft);
+}
+
+.connecting .connectionDot,
+.reconnecting .connectionDot {
+  background: var(--bl-new);
 }
 
 .time {
