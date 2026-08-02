@@ -1,3 +1,4 @@
+/* Глобальные токены и базовые стили приложения. */
 :root {
   /* Значения перенесены из design/barista-screen.dc.html. */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -19,6 +20,7 @@
   --bl-ready-ink: #1e5a3e;
   --bl-ready-summary-ink: #4a6b58;
   --bl-connection-live-bg: #eef4ef;
+  --bl-connection-stale-ink: #7d5f18;
 
   --bl-radius-board: 24px;
   --bl-radius-card: 18px;
