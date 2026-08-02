@@ -1,0 +1,6 @@
+/* Полноэкранная композиция рабочего места бариста. */
+.page {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}

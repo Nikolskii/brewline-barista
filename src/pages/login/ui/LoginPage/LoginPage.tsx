@@ -2,6 +2,7 @@ import { SignInForm } from '@/features/auth/sign-in';
 
 import styles from './LoginPage.module.scss';
 
+/** Полноэкранный сценарий входа бариста. */
 export function LoginPage() {
   return (
     <main className={styles.page}>

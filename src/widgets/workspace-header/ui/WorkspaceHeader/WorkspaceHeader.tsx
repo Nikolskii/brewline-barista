@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { formatCurrentTime } from '../lib/formatCurrentTime';
+import { formatCurrentTime } from '../../lib/formatCurrentTime';
 import styles from './WorkspaceHeader.module.scss';
 
-/**
- * Верхняя панель рабочего места. Реальный статус соединения появится вместе с
- * SSE; до этого индикатор показывает визуальное состояние из макета.
- */
+/** Верхняя панель рабочего места. Реальный статус соединения появится вместе с SSE. */
 export function WorkspaceHeader() {
   const [currentTime, setCurrentTime] = useState(() => formatCurrentTime(new Date()));
 

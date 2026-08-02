@@ -2,8 +2,8 @@ import { useOrderQueue } from '@/entities/order';
 import { OrderBoard } from '@/widgets/order-board';
 import { WorkspaceHeader } from '@/widgets/workspace-header';
 
+import { QueueState } from '../QueueState/QueueState';
 import styles from './BaristaWorkspacePage.module.scss';
-import { QueueState } from './QueueState';
 
 export function BaristaWorkspacePage() {
   const { isError, isPending, orders, refetch } = useOrderQueue();

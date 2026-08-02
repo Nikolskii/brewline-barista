@@ -1,1 +1,1 @@
-export { BaristaWorkspacePage } from './ui/BaristaWorkspacePage';
+export { BaristaWorkspacePage } from './ui/BaristaWorkspacePage/BaristaWorkspacePage';
