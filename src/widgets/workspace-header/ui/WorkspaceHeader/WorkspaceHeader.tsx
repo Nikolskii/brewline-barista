@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import type { OrderQueueConnection } from '@/entities/order';
+import { SignOutButton } from '@/features/auth/sign-out';
 
 import { formatCurrentTime } from '../../lib/formatCurrentTime';
 import { getConnectionLabel } from '../../lib/getConnectionLabel';
@@ -8,10 +9,11 @@ import styles from './WorkspaceHeader.module.scss';
 
 type WorkspaceHeaderProps = {
   connection: OrderQueueConnection;
+  onSignedOut: () => void;
 };
 
 /** Верхняя панель рабочего места с фактическим состоянием SSE-соединения. */
-export function WorkspaceHeader({ connection }: WorkspaceHeaderProps) {
+export function WorkspaceHeader({ connection, onSignedOut }: WorkspaceHeaderProps) {
   const [currentTime, setCurrentTime] = useState(() => formatCurrentTime(new Date()));
   const connectionLabel = getConnectionLabel(connection);
 
@@ -35,6 +37,7 @@ export function WorkspaceHeader({ connection }: WorkspaceHeaderProps) {
           <span className={styles.connectionLabel}>{connectionLabel}</span>
         </div>
         <time className={styles.time}>{currentTime}</time>
+        <SignOutButton onSignedOut={onSignedOut} />
       </div>
     </header>
   );

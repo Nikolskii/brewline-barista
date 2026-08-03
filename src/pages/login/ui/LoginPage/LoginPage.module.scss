@@ -38,6 +38,35 @@
   font-size: 16px;
 }
 
+.status {
+  width: 100%;
+  margin: 0;
+  padding: var(--bl-s5);
+  border: 1px solid var(--bl-line);
+  border-radius: var(--bl-radius-board);
+  color: var(--bl-ink-2);
+  background: var(--bl-card);
+  font-size: 16px;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.retry {
+  width: 100%;
+  height: var(--bl-touch);
+  margin-top: var(--bl-s4);
+  border: 0;
+  border-radius: var(--bl-radius-ctl);
+  color: var(--bl-button-ink);
+  background: var(--bl-preparing);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 @media (max-width: 480px) {
   .page {
     padding: var(--bl-s5);
