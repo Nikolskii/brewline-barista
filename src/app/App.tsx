@@ -1,11 +1,26 @@
+import { useBaristaSession } from '@/features/auth/session';
 import { BaristaWorkspacePage } from '@/pages/barista-workspace';
+import { LoginPage } from '@/pages/login';
 
-/**
- * Временный визуальный preview рабочего места. Проверка GET /auth/session
- * появится вместе с auth API и будет выбирать LoginPage или BaristaWorkspacePage.
- */
+import { AppLoader } from './ui/AppLoader/AppLoader';
+
+/** Корневая развилка: сначала проверяем сессию, затем показываем login или рабочее место. */
 function App() {
-  return <BaristaWorkspacePage />;
+  const session = useBaristaSession();
+
+  if (session.isPending) {
+    return <AppLoader />;
+  }
+
+  if (session.isError) {
+    return <LoginPage onRetry={() => void session.refetch()} state="error" />;
+  }
+
+  if (!session.data.authenticated) {
+    return <LoginPage onSignedIn={() => void session.refetch()} state="sign-in" />;
+  }
+
+  return <BaristaWorkspacePage onSignedOut={() => void session.refetch()} />;
 }
 
 export default App;

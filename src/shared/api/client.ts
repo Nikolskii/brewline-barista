@@ -12,19 +12,49 @@ if (!API_URL) {
   throw new Error('VITE_API_URL не задан — скопируйте .env.example в .env');
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
+export function apiGet<T>(path: string): Promise<T> {
+  return apiRequest<T>(path);
+}
+
+export function apiPost<T>(path: string, body: unknown): Promise<T> {
+  return apiRequest<T>(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
+
+async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_URL}${path}`, {
     // Кука сессии бариста появится в задаче про аутентификацию (ADR 0011).
     // Включено сразу: backend уже отвечает с credentials, а забытый флаг даёт
     // молчаливый 401 вместо понятной ошибки.
     credentials: 'include',
+    ...init,
   });
 
-  if (!res.ok) {
-    throw new Error(`GET ${path} → HTTP ${res.status}`);
+  if (!response.ok) {
+    throw new ApiError(
+      response.status,
+      `${init?.method ?? 'GET'} ${path} → HTTP ${response.status}`,
+    );
   }
 
-  return (await res.json()) as T;
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return (await response.json()) as T;
 }
 
 export { API_URL };
