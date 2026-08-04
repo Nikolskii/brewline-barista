@@ -1,1 +1,1 @@
-export { useBaristaSession } from './model/useBaristaSession';
+export { baristaSessionQueryKey, useBaristaSession } from './model/useBaristaSession';

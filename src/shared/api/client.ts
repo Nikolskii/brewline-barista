@@ -27,11 +27,11 @@ export function apiGet<T>(path: string): Promise<T> {
 }
 
 export function apiPost<T>(path: string, body: unknown): Promise<T> {
-  return apiRequest<T>(path, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
+  return apiRequestWithBody<T>('POST', path, body);
+}
+
+export function apiPatch<T>(path: string, body: unknown): Promise<T> {
+  return apiRequestWithBody<T>('PATCH', path, body);
 }
 
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
@@ -58,3 +58,11 @@ async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export { API_URL };
+
+function apiRequestWithBody<T>(method: 'POST' | 'PATCH', path: string, body: unknown): Promise<T> {
+  return apiRequest<T>(path, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}
