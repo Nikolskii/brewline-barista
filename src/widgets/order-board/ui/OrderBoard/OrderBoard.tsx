@@ -25,7 +25,7 @@ export function OrderBoard({ orders }: OrderBoardProps) {
         <div className={styles.orders}>
           {preparingOrders.map((order) => (
             <OrderCard
-              action={<AdvanceOrderStatusButton label="Готов" />}
+              action={<AdvanceOrderStatusButton label="Готов" orderId={order.orderId} />}
               key={order.orderId}
               meta="В работе"
               order={order}
@@ -51,7 +51,7 @@ export function OrderBoard({ orders }: OrderBoardProps) {
           <span className={styles.sectionCount}>{newOrders.length}</span>
         </div>
         {nextOrder ? (
-          <article className={styles.nextOrder}>
+          <article className={styles.nextOrder} key={nextOrder.orderId}>
             <div className={styles.nextOrderHeadline}>
               <span className={styles.nextOrderNumber}>{nextOrder.number}</span>
               <span className={styles.nextOrderBadge}>Следующий</span>
@@ -66,7 +66,11 @@ export function OrderBoard({ orders }: OrderBoardProps) {
                 </li>
               ))}
             </ul>
-            <AdvanceOrderStatusButton label="Взять в работу" targetStatus="preparing" />
+            <AdvanceOrderStatusButton
+              label="Взять в работу"
+              orderId={nextOrder.orderId}
+              targetStatus="preparing"
+            />
           </article>
         ) : (
           <p className={styles.sectionEmpty}>Очередь пуста.</p>
